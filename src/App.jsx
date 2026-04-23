@@ -4,10 +4,19 @@ import ProductCard from "./components/ProductCard";
 
 function App() {
   const availableCount = products.filter((p) => p.inStock).length;
+  const discountedCount = products.filter((p) => p.discount > 0).length;
 
   const categoryOrder = ["Audio", "Computer", "Accessories", "Wearables"];
 
   const sortedProducts = [...products].sort((a, b) => {
+    if (a.inStock !== b.inStock) {
+      return a.inStock ? -1 : 1;
+    }
+
+    if (b.discount !== a.discount) {
+      return b.discount - a.discount;
+    }
+
     const categoryCompare =
       categoryOrder.indexOf(a.category) - categoryOrder.indexOf(b.category);
 
@@ -24,7 +33,8 @@ function App() {
             <p className="hero-subtitle">Premium Tech Collection</p>
             <h1>Tech Shop</h1>
             <p className="hero-text">
-              Discover modern gadgets, accessories, and everyday tech essentials.
+              Discover premium gadgets, smart accessories, and stylish tech deals
+              designed for everyday life.
             </p>
 
             <div className="hero-stats">
@@ -37,11 +47,6 @@ function App() {
                 <span className="stat-number">{availableCount}</span>
                 <span className="stat-label">Available</span>
               </div>
-
-              <div className="stat-box">
-                <span className="stat-number">4.8</span>
-                <span className="stat-label">Top Rating</span>
-              </div>
             </div>
           </header>
 
@@ -52,11 +57,11 @@ function App() {
             </div>
           </section>
 
-          <div className="gallery-grid">
+          <section className="gallery-grid">
             {sortedProducts.map((product) => (
               <ProductCard key={product.id} {...product} />
             ))}
-          </div>
+          </section>
         </div>
       </div>
     </div>
