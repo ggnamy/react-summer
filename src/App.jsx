@@ -13,6 +13,9 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All');
+  const [sortBy, setSortBy] = useState('name');
+  const [favourites, setFavourites] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   const regions = ['All','Africa','Americas','Asia','Europe','Oceania'];
 
@@ -21,8 +24,24 @@ function App() {
     (selectedRegion === 'All' || c.region === selectedRegion)
   );
 
-  if (loading) return <p>Loading countries...</p>;
-  if (error) return <p>Error: {error}</p>;
+  const sorted = [...filtered].sort((a, b) => {
+    if (sortBy === 'population') return b.population - a.population;
+    return a.name.common.localeCompare(b.name.common);
+  });
+
+  function toggleFavourite(name) {
+    setFavourites(prev =>
+      prev.includes(name)
+        ? prev.filter(f => f !== name)
+        : [...prev, name]
+    );
+  }
+
+  function getRegionCount(region) {
+    if (!countries) return 0;
+    if (region === 'All') return countries.length;
+    return countries.filter(c => c.region === region).length;
+  }
 
   return (
     <div className="app">
@@ -30,23 +49,64 @@ function App() {
         <h1>🌍 Country Explorer</h1>
       </div>
 
-      <SearchBar onSearch={setSearchTerm} searchTerm={searchTerm} />
+      <div className="controls">
+        <SearchBar onSearch={setSearchTerm} searchTerm={searchTerm} />
+
+        <select
+          className="sort"
+          onChange={(e)=>setSortBy(e.target.value)}
+        >
+          <option value="name">Sort by Name</option>
+          <option value="population">Sort by Population</option>
+        </select>
+      </div>
 
       <RegionFilter
         regions={regions}
         selectedRegion={selectedRegion}
         setSelectedRegion={setSelectedRegion}
+        getRegionCount={getRegionCount}
       />
 
-      <p>Showing {filtered.length} of {countries.length} countries</p>
+      <p className="count">
+        Showing {filtered.length} of {countries?.length || 0}
+      </p>
 
       <div className="country-grid">
-        {filtered
-          .sort((a,b)=>a.name.common.localeCompare(b.name.common))
-          .map(c => (
-            <CountryCard key={c.name.common} country={c} />
+        {loading &&
+          Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="skeleton"></div>
+          ))}
+
+        {error && <p>Error: {error}</p>}
+
+        {!loading &&
+          sorted.map(c => (
+            <CountryCard
+              key={c.name.common}
+              country={c}
+              isFav={favourites.includes(c.name.common)}
+              onFav={toggleFavourite}
+              onClick={() => setSelectedCountry(c)}
+            />
           ))}
       </div>
+
+      {selectedCountry && (
+        <div className="modal" onClick={() => setSelectedCountry(null)}>
+          <div className="modal-content" onClick={(e)=>e.stopPropagation()}>
+            <img
+              src={selectedCountry.flags.svg}
+              className="modal-flag"
+            />
+            <h2>{selectedCountry.name.common}</h2>
+            <p>Capital: {selectedCountry.capital?.[0]}</p>
+            <p>Population: {selectedCountry.population.toLocaleString()}</p>
+            <p>Region: {selectedCountry.region}</p>
+            <button onClick={()=>setSelectedCountry(null)}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

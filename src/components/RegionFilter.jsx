@@ -1,13 +1,13 @@
-function RegionFilter({ regions, selectedRegion, setSelectedRegion }) {
+function RegionFilter({ regions, selectedRegion, setSelectedRegion, getRegionCount }) {
   return (
     <div className="region-filter">
-      {regions.map((r) => (
+      {regions.map(r => (
         <button
           key={r}
           className={selectedRegion === r ? "active" : ""}
           onClick={() => setSelectedRegion(r)}
         >
-          {r}
+          {r} <span className="badge">{getRegionCount(r)}</span>
         </button>
       ))}
     </div>

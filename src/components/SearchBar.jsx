@@ -1,24 +1,18 @@
 import { useRef } from 'react';
 
 function SearchBar({ onSearch, searchTerm }) {
-  const inputRef = useRef(null);
-
-  function handleClear() {
-    onSearch('');
-    inputRef.current.focus(); 
-  }
+  const ref = useRef();
 
   return (
     <div className="search-container">
       <input
-        ref={inputRef}
+        ref={ref}
         value={searchTerm}
-        onChange={(e) => onSearch(e.target.value)}
-        placeholder="Search for a country..."
+        onChange={(e)=>onSearch(e.target.value)}
+        placeholder="Search country..."
       />
-
       {searchTerm && (
-        <button onClick={handleClear}>✕</button>
+        <button onClick={() => onSearch('')}>✕</button>
       )}
     </div>
   );
