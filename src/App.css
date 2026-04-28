@@ -1,0 +1,120 @@
+body {
+  background: #f0f4f8;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 500px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+h1 {
+  color: #2b7cff;
+  text-align: center;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.input-group input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.input-group button {
+  background: #2b7cff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.input-group button:hover {
+  background: #1a5edb;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.filters button {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.filters button:hover {
+  background: #eee;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.task span {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.done {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.task button {
+  border: 1px solid #ccc;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.task button:hover {
+  background: #eee;
+}
+
+.clear {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid red;
+  color: red;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.clear:hover {
+  background: #ffe5e5;
+}
+.filters button.active {
+  background: #2b7cff;
+  color: white;
+  border: none;
+}
