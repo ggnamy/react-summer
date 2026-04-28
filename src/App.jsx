@@ -43,6 +43,19 @@ function App() {
     return countries.filter(c => c.region === region).length;
   }
 
+  if (loading) {
+    return (
+      <div className="full-loading">
+        <div className="loader"></div>
+        <p>Loading countries...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div className="app">
       <div className="app-header">
@@ -69,27 +82,19 @@ function App() {
       />
 
       <p className="count">
-        Showing {filtered.length} of {countries?.length || 0}
+        Showing {filtered.length} of {countries.length}
       </p>
 
       <div className="country-grid">
-        {loading &&
-          Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="skeleton"></div>
-          ))}
-
-        {error && <p>Error: {error}</p>}
-
-        {!loading &&
-          sorted.map(c => (
-            <CountryCard
-              key={c.name.common}
-              country={c}
-              isFav={favourites.includes(c.name.common)}
-              onFav={toggleFavourite}
-              onClick={() => setSelectedCountry(c)}
-            />
-          ))}
+        {sorted.map(c => (
+          <CountryCard
+            key={c.name.common}
+            country={c}
+            isFav={favourites.includes(c.name.common)}
+            onFav={toggleFavourite}
+            onClick={() => setSelectedCountry(c)}
+          />
+        ))}
       </div>
 
       {selectedCountry && (

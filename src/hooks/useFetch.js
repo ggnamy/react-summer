@@ -8,8 +8,13 @@ function useFetch(url) {
   useEffect(() => {
     async function fetchData() {
       try {
+        setLoading(true);
+
         const res = await fetch(url);
         const json = await res.json();
+
+        await new Promise(r => setTimeout(r, 1500)); // เอาไว้ดู loading
+
         setData(json);
       } catch (err) {
         setError(err.message);
@@ -17,6 +22,7 @@ function useFetch(url) {
         setLoading(false);
       }
     }
+
     fetchData();
   }, [url]);
 
