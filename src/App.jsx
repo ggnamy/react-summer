@@ -108,6 +108,7 @@ function App() {
             <p>Capital: {selectedCountry.capital?.[0]}</p>
             <p>Population: {selectedCountry.population.toLocaleString()}</p>
             <p>Region: {selectedCountry.region}</p>
+            <p>Languages: {selectedCountry.languages ? Object.values(selectedCountry.languages).join(', ') : 'N/A'}</p>
             <button onClick={()=>setSelectedCountry(null)}>Close</button>
           </div>
         </div>
