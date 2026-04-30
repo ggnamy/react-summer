@@ -1,0 +1,154 @@
+/* การตั้งค่าพื้นฐาน */
+:root {
+  --primary: #6366f1;
+  --secondary: #a855f7;
+  --bg: #f3f4f6;
+  --white: #ffffff;
+  --danger: #f43f5e;
+  --success: #10b981;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --border: #e5e7eb;
+}
+
+/* Layout หลัก */
+.app-wrapper {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
+/* Card ดีไซน์ */
+.card {
+  background: var(--white);
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  margin-bottom: 1.25rem;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+}
+
+/* ฟอร์มและอินพุต */
+.form-group { display: flex; flex-direction: column; gap: 0.75rem; }
+.form-row { display: flex; gap: 0.5rem; }
+
+.input-field, .select-field {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: #f9fafb;
+  outline: none;
+  transition: 0.2s;
+  width: 100%;
+}
+
+.input-field:focus { border-color: var(--primary); background: var(--white); }
+
+/* ปุ่มต่างๆ */
+.btn-primary {
+  width: 100%;
+  padding: 0.8rem;
+  background: var(--primary);
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  transition: 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
+
+.btn-outline {
+  width: 100%;
+  padding: 0.7rem;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  background: transparent;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
+.btn-outline:hover { background: var(--primary); color: white; }
+
+/* Summary Card */
+.total-display { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin: 0.5rem 0 1.5rem; }
+.progress-section { margin: 1.5rem 0; }
+.progress-text { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.4rem; }
+.progress-track { background: #e5e7eb; height: 10px; border-radius: 5px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--success); transition: 0.5s; }
+.progress-bar.over { background: var(--danger); }
+
+/* Expense List */
+.filter-scroll {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.chip {
+  padding: 0.4rem 1.2rem;
+  border-radius: 2rem;
+  background: #f3f4f6;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.chip.active { background: var(--primary); color: white; }
+
+.expense-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.exp-name { display: block; font-weight: 600; color: var(--text-dark); }
+.exp-meta { font-size: 0.8rem; color: var(--text-light); }
+.exp-amount { font-weight: 700; color: var(--text-dark); font-size: 1.1rem; }
+
+.action-btns { display: flex; gap: 0.25rem; margin-top: 0.25rem; }
+.btn-icon { background: none; border: none; cursor: pointer; font-size: 1rem; opacity: 0.6; }
+.btn-icon:hover { opacity: 1; }
+
+/* Chart Area */
+.chart-item { margin-bottom: 1.25rem; }
+.chart-info { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.4rem; }
+.bar-bg { background: #f3f4f6; height: 8px; border-radius: 4px; }
+.bar-fill { background: var(--primary); height: 100%; border-radius: 4px; transition: 1s ease-in-out; }
+
+/* Responsive */
+@media (max-width: 850px) {
+  .app-layout { grid-template-columns: 1fr; }
+  .app-wrapper { margin: 1rem auto; }
+}
