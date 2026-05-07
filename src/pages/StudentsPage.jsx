@@ -126,15 +126,6 @@ function StudentsPage() {
           <div className="stat-note">คะแนนเฉลี่ยสูงสุดในระบบ</div>
         </div>
 
-        <div className="stat-card">
-          <div className="stat-top">
-            <div className="stat-icon icon-blue">💫</div>
-            <div className="stat-badge">System</div>
-          </div>
-          <span>System Status</span>
-          <h2 style={{ fontSize: "1.2rem", marginTop: "12px" }}>Stable</h2>
-          <div className="stat-note">ระบบพร้อมใช้งานปกติ</div>
-        </div>
       </div>
 
       {/* Form */}
