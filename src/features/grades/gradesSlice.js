@@ -2,11 +2,9 @@ import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 
 const gradesAdapter = createEntityAdapter();
 
-const initialState = gradesAdapter.getInitialState();
-
 const gradesSlice = createSlice({
   name: "grades",
-  initialState,
+  initialState: gradesAdapter.getInitialState(),
   reducers: {
     addGrade: (state, action) => {
       gradesAdapter.addOne(state, { id: Date.now(), ...action.payload });

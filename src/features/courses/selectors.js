@@ -1,13 +1,14 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { selectAllCourses } from "./coursesSlice";
+import { coursesApi } from "./courseApi";
 
-// ── Primitive selectors (scalars — no memoization needed)
-export const selectCoursesStatus = (state) => state.courses.status;
-export const selectCoursesError = (state) => state.courses.error;
+const selectCoursesResult = coursesApi.endpoints.getCourses.select();
+const selectCoursesData = createSelector(
+  selectCoursesResult,
+  (result) => result.data ?? []
+);
 
-// ── Derived selectors (memoized)
 export const makeSelectCoursesAboveCredits = (minCredits) =>
   createSelector(
-    selectAllCourses,
+    selectCoursesData,
     (courses) => courses.filter((c) => c.credits >= minCredits)
   );

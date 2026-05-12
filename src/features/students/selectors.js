@@ -1,39 +1,39 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { selectAllStudents } from "./studentsSlice";
-import { selectAllCourses } from "../courses/coursesSlice";
+import { studentsApi } from "./studentApi";
+import { coursesApi } from "../courses/courseApi";
 import { selectAllGrades } from "../grades/gradesSlice";
 
-// ── Primitive selectors (scalars — no memoization needed)
-export const selectStudentsStatus = (state) => state.students.status;
-export const selectStudentsError = (state) => state.students.error;
-
-// ── Derived selectors (memoized — compute arrays or objects)
-export const selectAverageGpa = createSelector(
-  selectAllStudents,
-  (students) => {
-    if (!students.length) return "—";
-    return (students.reduce((acc, s) => acc + s.gpa, 0) / students.length).toFixed(2);
-  }
+const selectStudentsResult = studentsApi.endpoints.getStudents.select();
+const selectStudentsData = createSelector(
+  selectStudentsResult,
+  (result) => result.data ?? []
 );
 
+const selectCoursesResult = coursesApi.endpoints.getCourses.select();
+const selectCoursesData = createSelector(
+  selectCoursesResult,
+  (result) => result.data ?? []
+);
+
+export const selectAverageGpa = createSelector(selectStudentsData, (students) => {
+  if (!students.length) return "—";
+  return (students.reduce((acc, s) => acc + s.gpa, 0) / students.length).toFixed(2);
+});
+
 export const selectHighAchievers = createSelector(
-  selectAllStudents,
+  selectStudentsData,
   (students) => students.filter((s) => s.gpa >= 3.5)
 );
 
-export const selectGpaDistribution = createSelector(
-  selectAllStudents,
-  (students) => ({
-    high: students.filter((s) => s.gpa >= 3.5).length,
-    medium: students.filter((s) => s.gpa >= 2.5 && s.gpa < 3.5).length,
-    low: students.filter((s) => s.gpa < 2.5).length,
-  })
-);
+export const selectGpaDistribution = createSelector(selectStudentsData, (students) => ({
+  high: students.filter((s) => s.gpa >= 3.5).length,
+  medium: students.filter((s) => s.gpa >= 2.5 && s.gpa < 3.5).length,
+  low: students.filter((s) => s.gpa < 2.5).length,
+}));
 
-// ── Cross-slice selector (joins grades with student and course names)
 export const selectAllGradesWithNames = createSelector(
-  selectAllStudents,
-  selectAllCourses,
+  selectStudentsData,
+  selectCoursesData,
   selectAllGrades,
   (students, courses, grades) =>
     grades.map((grade) => {

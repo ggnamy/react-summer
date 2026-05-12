@@ -1,13 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-
-import studentsReducer from "../features/students/studentsSlice";
-import coursesReducer from "../features/courses/coursesSlice";
+import { studentsApi } from "../features/students/studentApi";
+import { coursesApi } from "../features/courses/courseApi";
 import gradesReducer from "../features/grades/gradesSlice";
 
 export const store = configureStore({
   reducer: {
-    students: studentsReducer,
-    courses: coursesReducer,
+    [studentsApi.reducerPath]: studentsApi.reducer,
+    [coursesApi.reducerPath]: coursesApi.reducer,
     grades: gradesReducer,
   },
+  middleware: (getDefault) =>
+    getDefault()
+      .concat(studentsApi.middleware)
+      .concat(coursesApi.middleware),
 });

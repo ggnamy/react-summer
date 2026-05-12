@@ -1,30 +1,31 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addStudent } from "../features/students/studentsSlice";
+import { useAddStudentMutation } from "../features/students/studentApi";
 
 const EMPTY_FORM = { name: "", studentId: "", major: "", gpa: "" };
 
 function AddStudentForm() {
-  const dispatch = useDispatch();
+  const [addStudent, { isLoading }] = useAddStudentMutation();
   const [form, setForm] = useState(EMPTY_FORM);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addStudent({ id: Date.now(), ...form, gpa: parseFloat(form.gpa) || 0 }));
-    setForm(EMPTY_FORM); // รีเซ็ตฟอร์มหลังส่งข้อมูล
+    await addStudent({ ...form, gpa: parseFloat(form.gpa) || 0 }).unwrap();
+    setForm(EMPTY_FORM);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" required />
-      <input name="studentId" placeholder="Student ID" value={form.studentId} onChange={handleChange} required />
-      <input name="major" placeholder="Major" value={form.major} onChange={handleChange} />
-      <input name="gpa" placeholder="GPA (0.0–4.0)" value={form.gpa} onChange={handleChange} type="number" step="0.01" min="0" max="4" />
-      <button type="submit">+ Add Student</button>
+      <input name="studentId" value={form.studentId} onChange={handleChange} placeholder="Student ID" required />
+      <input name="major" value={form.major} onChange={handleChange} placeholder="Major" />
+      <input name="gpa" value={form.gpa} onChange={handleChange} placeholder="GPA (0.0–4.0)" type="number" step="0.01" min="0" max="4" />
+      <button type="submit" disabled={isLoading}>
+        {isLoading ? "Saving…" : "+ Add Student"}
+      </button>
     </form>
   );
 }

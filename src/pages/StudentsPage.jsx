@@ -1,50 +1,38 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import {
-  fetchStudents,
-  addStudentAsync,
-  deleteStudentAsync,
-  updateStudentAsync
-} from "../features/students/studentsThunks";
-import { selectAllStudents } from "../features/students/studentsSlice";
+  useGetStudentsQuery,
+  useAddStudentMutation,
+  useUpdateStudentMutation,
+  useDeleteStudentMutation,
+} from "../features/students/studentApi";
 
 function StudentsPage() {
-  const students = useSelector(selectAllStudents);
-  const dispatch = useDispatch();
+  const { data: students = [], isLoading, isError } = useGetStudentsQuery();
+  const [addStudent] = useAddStudentMutation();
+  const [updateStudent] = useUpdateStudentMutation();
+  const [deleteStudent] = useDeleteStudentMutation();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    studentId: "",
-    major: "",
-    gpa: ""
-  });
-
+  const [formData, setFormData] = useState({ name: "", studentId: "", major: "", gpa: "" });
   const [isEditing, setIsEditing] = useState(null);
 
-  // โหลดข้อมูลจาก API เมื่อเปิดหน้า
-  useEffect(() => {
-    dispatch(fetchStudents());
-  }, [dispatch]);
-
-  // คำนวณสถิติ
   const stats = {
     avg: students.length
       ? (students.reduce((a, b) => a + Number(b.gpa), 0) / students.length).toFixed(2)
       : "0.00",
     high: students.length
       ? Math.max(...students.map((s) => Number(s.gpa))).toFixed(2)
-      : "0.00"
+      : "0.00",
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.studentId || !formData.gpa) return;
 
     if (isEditing) {
-      dispatch(updateStudentAsync({ id: isEditing, ...formData, gpa: Number(formData.gpa) }));
+      await updateStudent({ id: isEditing, ...formData, gpa: Number(formData.gpa) });
       setIsEditing(null);
     } else {
-      dispatch(addStudentAsync({ ...formData, gpa: Number(formData.gpa) }));
+      await addStudent({ ...formData, gpa: Number(formData.gpa) });
     }
 
     setFormData({ name: "", studentId: "", major: "", gpa: "" });
@@ -52,12 +40,7 @@ function StudentsPage() {
 
   const handleEdit = (student) => {
     setIsEditing(student.id);
-    setFormData({
-      name: student.name,
-      studentId: student.studentId,
-      major: student.major,
-      gpa: student.gpa
-    });
+    setFormData({ name: student.name, studentId: student.studentId, major: student.major, gpa: student.gpa });
   };
 
   const handleCancelEdit = () => {
@@ -65,9 +48,11 @@ function StudentsPage() {
     setFormData({ name: "", studentId: "", major: "", gpa: "" });
   };
 
+  if (isLoading) return <div className="spinner">Loading…</div>;
+  if (isError) return <div className="error-banner"><p>Failed to load students.</p></div>;
+
   return (
     <div className="students-page fade-in">
-      {/* Hero Section */}
       <div className="page-hero">
         <div className="hero-badge">🎀 Kawaii Student Dashboard</div>
         <h1 className="hero-title">
@@ -75,7 +60,6 @@ function StudentsPage() {
         </h1>
       </div>
 
-      {/* Stats Cards */}
       <div className="dashboard-grid">
         <div className="stat-card">
           <div className="stat-top">
@@ -108,7 +92,6 @@ function StudentsPage() {
         </div>
       </div>
 
-      {/* Form Card */}
       <div className="form-card">
         <div className="form-title-row">
           <div>
@@ -145,7 +128,6 @@ function StudentsPage() {
         </form>
       </div>
 
-      {/* Table Card */}
       <div className="table-card">
         <div className="table-header">
           <h3>📋 Student Records</h3>
@@ -155,11 +137,7 @@ function StudentsPage() {
           <table>
             <thead>
               <tr>
-                <th>NAME</th>
-                <th>ID</th>
-                <th>MAJOR</th>
-                <th>GPA</th>
-                <th>ACTIONS</th>
+                <th>NAME</th><th>ID</th><th>MAJOR</th><th>GPA</th><th>ACTIONS</th>
               </tr>
             </thead>
             <tbody>
@@ -177,7 +155,7 @@ function StudentsPage() {
                   <td>
                     <div className="action-group">
                       <button className="btn-edit-sm" onClick={() => handleEdit(s)}>✏️ Edit</button>
-                      <button className="btn-delete-sm" onClick={() => dispatch(deleteStudentAsync(s.id))}>🗑 Delete</button>
+                      <button className="btn-delete-sm" onClick={() => deleteStudent(s.id)}>🗑 Delete</button>
                     </div>
                   </td>
                 </tr>

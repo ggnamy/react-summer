@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import { selectStudentCount } from "../features/students/studentsSlice";
+import { useGetStudentsQuery } from "../features/students/studentApi";
 import { selectAverageGpa } from "../features/students/selectors";
 import { selectGradeCount } from "../features/grades/gradesSlice";
 import { selectAverageGrade } from "../features/grades/selectors";
 
 function GpaSummary() {
-  const studentCount = useSelector(selectStudentCount);
+  const { data: students = [] } = useGetStudentsQuery();
   const averageGpa = useSelector(selectAverageGpa);
   const gradeCount = useSelector(selectGradeCount);
   const averageGrade = useSelector(selectAverageGrade);
@@ -13,7 +13,7 @@ function GpaSummary() {
   return (
     <div className="gpa-summary">
       <div className="stat-card">
-        <span className="stat-value">{studentCount}</span>
+        <span className="stat-value">{students.length}</span>
         <span className="stat-label">Total Students</span>
       </div>
       <div className="stat-card">
