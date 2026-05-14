@@ -15,13 +15,5 @@ export default defineConfig({
   build: {
     sourcemap: false,
     chunkSizeWarningLimit: 500,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          redux: ['@reduxjs/toolkit', 'react-redux'],
-        },
-      },
-    },
   },
 })
