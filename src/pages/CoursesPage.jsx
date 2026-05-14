@@ -6,7 +6,18 @@ import {
 } from "../features/courses/courseApi";
 
 function CoursesPage() {
-  const { data: courses = [], isLoading, isError } = useGetCoursesQuery();
+  const {
+    data: courses = [],
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useGetCoursesQuery(undefined, {
+    pollingInterval: 30_000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true,
+  });
   const [addCourse, { isLoading: isAdding }] = useAddCourseMutation();
   const [deleteCourse] = useDeleteCourseMutation();
 
@@ -37,6 +48,11 @@ function CoursesPage() {
             {isAdding ? "Adding…" : "Add Course"}
           </button>
         </form>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+        {isFetching && <span style={{ fontSize: 11, color: '#3A5BA0' }}>↻ Syncing…</span>}
+        <button onClick={refetch}>↻ Refresh</button>
       </div>
 
       <div className="dashboard-grid">

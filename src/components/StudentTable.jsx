@@ -1,7 +1,18 @@
 import { useGetStudentsQuery, useDeleteStudentMutation } from "../features/students/studentApi";
 
 function StudentTable() {
-  const { data: students = [], isLoading, isError } = useGetStudentsQuery();
+  const {
+    data: students = [],
+    isLoading,
+    isError,
+    isFetching,
+    refetch,
+  } = useGetStudentsQuery(undefined, {
+    pollingInterval: 30_000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true,
+  });
   const [deleteStudent] = useDeleteStudentMutation();
 
   const handleDelete = (id) => {
@@ -14,7 +25,10 @@ function StudentTable() {
   if (isError) return <p>Failed to load students.</p>;
 
   return (
-    <table>
+    <div>
+      {isFetching && <span style={{ fontSize: 11, color: '#3A5BA0' }}>↻ Syncing…</span>}
+      <button onClick={refetch}>↻ Refresh</button>
+      <table>
       <thead>
         <tr>
           <th>Name</th><th>Student ID</th><th>Major</th><th>GPA</th><th>Actions</th>
@@ -32,6 +46,7 @@ function StudentTable() {
         ))}
       </tbody>
     </table>
+    </div>
   );
 }
 

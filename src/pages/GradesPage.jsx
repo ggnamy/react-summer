@@ -6,8 +6,16 @@ import { useGetCoursesQuery } from "../features/courses/courseApi";
 
 function GradesPage() {
   const grades = useSelector(selectAllGrades);
-  const { data: students = [] } = useGetStudentsQuery();
-  const { data: courses = [] } = useGetCoursesQuery();
+  const { data: students = [], isFetching: isFetchingStudents } = useGetStudentsQuery(undefined, {
+    pollingInterval: 30_000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
+  const { data: courses = [], isFetching: isFetchingCourses } = useGetCoursesQuery(undefined, {
+    pollingInterval: 30_000,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({ studentId: "", courseId: "", score: "" });
@@ -47,14 +55,20 @@ function GradesPage() {
       <div className="form-card">
         <h3 className="form-title">{isEditing ? "📝 Edit Grade Entry" : "🎯 Record Grade"}</h3>
         <form className="input-group" onSubmit={handleAction}>
-          <select value={formData.studentId} onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}>
-            <option value="">Select Student</option>
-            {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
-          </select>
-          <select value={formData.courseId} onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}>
-            <option value="">Select Course</option>
-            {courses.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
-          </select>
+          <div>
+            {isFetchingStudents && <span style={{ fontSize: 11, color: '#3A5BA0' }}>↻ Syncing…</span>}
+            <select value={formData.studentId} onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}>
+              <option value="">Select Student</option>
+              {students.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+          </div>
+          <div>
+            {isFetchingCourses && <span style={{ fontSize: 11, color: '#3A5BA0' }}>↻ Syncing…</span>}
+            <select value={formData.courseId} onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}>
+              <option value="">Select Course</option>
+              {courses.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+            </select>
+          </div>
           <input type="number" placeholder="Score" value={formData.score} onChange={(e) => setFormData({ ...formData, score: e.target.value })} />
           <button type="submit" className="btn-submit">{isEditing ? "Update" : "Save"}</button>
           {isEditing && (
